@@ -1,0 +1,42 @@
+name: 's3 sync with rclone'
+description: 'sync to an s3-compatible bucket with rclone'
+author: 'wlcx'
+inputs:
+  endpoint:
+    description: 'Endpoint of object storage host. e.g. garage.example.com'
+    required: true
+  access_key:
+    description: 'access key (username)'
+    required: true
+  secret_key:
+    description: 'secret key (password)'
+    required: true
+  bucket:
+    description: 'Target bucket'
+    required: true
+  region:
+    description: 'Target region'
+    required: true
+  source_dir:
+    description: 'Set an input directory for deployment.'
+    required: false
+    default: 'public'
+  target_dir:
+    description: 'Set a target directory for deployment (with a leading slash).'
+    required: false
+    default: '/'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    ENDPOINT: ${{ inputs.endpoint }}
+    ACCESS_KEY: ${{ inputs.access_key }}
+    SECRET_KEY: ${{ inputs.secret_key }}
+    BUCKET: ${{ inputs.bucket }}
+    REGION: ${{ inputs.region }}
+  args:
+    - ${{ inputs.source_dir }}
+    - '${{ inputs.bucket }}${{ inputs.target_dir }}'
+branding:
+  icon: 'upload-cloud'
+  color: 'red'
